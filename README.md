@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚢 FraktIntelligens
 
-## Getting Started
+AI-driven fraktoptimering för svenska logistikchefer. Analysera dina fraktrutter och få konkreta förslag på hur du sänker kostnaderna med 15–30%.
 
-First, run the development server:
+## Live
+
+- **Landningssida:** https://fraktintelligens.vercel.app
+- **App:** https://fraktintelligens.vercel.app/app
+- **GitHub:** https://github.com/Mats6102hamberg/fraktintelligens
+
+## Stack
+
+| Lager | Teknik |
+|-------|--------|
+| Frontend | Next.js 16, React 19, TypeScript |
+| Styling | Tailwind CSS 4 |
+| AI | Anthropic Claude Haiku (claude-haiku-4-5-20251001) |
+| Auth | Clerk |
+| Databas | Neon PostgreSQL |
+| Karta | Leaflet + OpenStreetMap |
+| E-post | Resend (valfritt) |
+| Deploy | Vercel |
+
+## Funktioner
+
+**Landningssida (`/`)**
+- Hero, hur-det-fungerar, features, prissättning
+- Kontaktformulär för Enterprise-kunder
+
+**App (`/app`)** — kräver inloggning
+- Lägg in fraktrutter (avsändare, mottagare, vikt, frekvens, kostnad, speditör, varutyp)
+- Demo-data med ett klick
+- AI-analys via Claude — besparingsförslag med %, kronor och implementeringssvårighet
+- Speditörsjämförelse (DHL, PostNord, Schenker, Bring, DSV)
+- Leaflet-karta med ruttvisualisering
+- Historik — 10 senaste analyserna sparas lokalt
+- PDF-export — utskrivbar rapport med styling
+- Sparade rutter i localStorage
+- Analyser sparas i databas per användare
+
+## Komma igång lokalt
 
 ```bash
+git clone https://github.com/Mats6102hamberg/fraktintelligens.git
+cd fraktintelligens
+npm install
+cp .env.local.example .env.local   # fyll i nycklar
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Env-variabler
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```env
+ANTHROPIC_API_KEY=sk-ant-...
+DATABASE_URL=postgresql://...
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/app
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/app
+RESEND_API_KEY=re_...          # valfritt, för kontaktformulär
+CONTACT_EMAIL=din@email.se     # valfritt, mottagare för kontaktformulär
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Databas
 
-## Learn More
+Kör `schema.sql` i Neon-konsolen för att skapa tabellerna:
 
-To learn more about Next.js, take a look at the following resources:
+```sql
+-- saved_routes: sparar rutter per användare
+-- analyses: sparar AI-analyser per användare
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## API-routes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Route | Metod | Funktion |
+|-------|-------|----------|
+| `/api/analyze` | POST | AI-analys av fraktrutter |
+| `/api/routes` | GET, POST, DELETE | Sparade rutter (kräver auth) |
+| `/api/analyses` | GET, POST | Analyshistorik (kräver auth) |
+| `/api/contact` | POST | Kontaktformulär (Enterprise) |
