@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { auth } from "@clerk/nextjs/server";
+import { getDb } from "@/lib/db";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -46,6 +48,16 @@ Var specifik och handlingsorienterad. Skriv på svenska. Använd markdown-format
     });
 
     const text = message.content[0].type === "text" ? message.content[0].text : "";
+
+    // Save to DB if user is logged in
+    try {
+      const { userId } = await auth();
+      if (userId && process.env.DATABASE_URL) {
+        const sql = getDb();
+        await sql`INSERT INTO analyses (user_id, routes, analysis, total_cost) VALUES (${userId}, ${JSON.stringify(routes)}, ${text}, ${Math.round(totalMonthlyCost)})`;
+      }
+    } catch { /* DB is optional */ }
+
     return NextResponse.json({ analysis: text, totalMonthlyCost });
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : "Okänt fel";

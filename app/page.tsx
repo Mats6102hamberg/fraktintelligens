@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ContactForm from "@/components/ContactForm";
 
 export default function LandingPage() {
   return (
@@ -14,6 +15,7 @@ export default function LandingPage() {
             <a href="#hur" className="hover:text-gray-900 transition-colors">Hur det fungerar</a>
             <a href="#features" className="hover:text-gray-900 transition-colors">Funktioner</a>
             <a href="#pris" className="hover:text-gray-900 transition-colors">Pris</a>
+            <a href="#kontakt" className="hover:text-gray-900 transition-colors">Kontakt</a>
           </div>
           <Link href="/app" className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
             Prova gratis
@@ -144,6 +146,9 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* Kontaktformulär */}
+      <ContactForm />
 
       {/* CTA */}
       <section className="py-24 px-6 bg-sky-500">
