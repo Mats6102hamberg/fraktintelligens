@@ -15,6 +15,7 @@ export default function LandingPage() {
             <a href="#hur" className="hover:text-gray-900 transition-colors">Hur det fungerar</a>
             <a href="#features" className="hover:text-gray-900 transition-colors">Funktioner</a>
             <a href="#pris" className="hover:text-gray-900 transition-colors">Pris</a>
+            <Link href="/validate" className="hover:text-gray-900 transition-colors font-medium text-sky-600">Prisvalidering</Link>
             <a href="#kontakt" className="hover:text-gray-900 transition-colors">Kontakt</a>
           </div>
           <Link href="/app" className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">

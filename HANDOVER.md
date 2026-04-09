@@ -91,6 +91,28 @@ Finns i `app/api/analyze/route.ts`. Prompten ber Claude om:
 3. Prioriteringsordning
 4. Total potential
 
+## Prisvalidering (/validate)
+
+Fristående sida utan Clerk-auth. Tillgänglig direkt utan databas (faller tillbaka på marknadsriktpriser).
+
+| Fil | Funktion |
+|-----|----------|
+| `app/validate/page.tsx` | UI: formulär + result-kort (grön/gul/röd) |
+| `app/api/validate/route.ts` | POST: regelmotor → AI-förklaring → spara |
+| `lib/validateShipment.ts` | Regelmotor — AI fattar INGA beslut här |
+| `migration-validate.sql` | shipments-tabell, kör i Neon |
+
+**Regelmotor:**
+- ≥3 historiska frakter i DB för korridoren → använder deras genomsnitt
+- <3 historiska → hårdkodade marknadsriktpriser per varutyp (kr/kg)
+- >25% över riktpris → Avvikande (röd)
+- 10–25% → Lite högt (gul)
+- ≤10% → Rimligt (grön)
+
+**AI-roll:** Formulerar ENBART en 2–3 meningars förklaring av beslutet. Fattar inget beslut.
+
+**Migration att köra:** `migration-validate.sql` i Neon-konsolen.
+
 ## Nästa steg (förslag)
 
 - Koppla upp Clerk + Neon för full auth + persistent historik
@@ -100,4 +122,4 @@ Finns i `app/api/analyze/route.ts`. Prompten ber Claude om:
 - E-postaviseringar för sparade analyser
 
 ## Senast uppdaterat
-2026-04-08 — Hela projektet byggt från scratch
+2026-04-09 — Prisvalidering (/validate) tillagd

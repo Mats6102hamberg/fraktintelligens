@@ -1,6 +1,29 @@
 # SESSION_SUMMARY – FraktIntelligens
 
-## Senaste session: 2026-04-08
+## Session: 2026-04-09 — Prisvalidering
+
+### Vad som byggts
+
+**Ny funktion: /validate (prisvalidering)**
+- Fristående sida utan Clerk-auth
+- Formulär: från, till, pris, vikt, varutyp, speditör, leveranstid
+- Regelmotor (`lib/validateShipment.ts`) — AI fattar INGA beslut
+  - ≥3 historiska frakter i DB → genomsnitt som benchmark
+  - <3 → hårdkodade marknadsriktpriser (kr/kg per varutyp)
+  - Status: Rimligt (grön) / Lite högt (gul) / Avvikande (röd)
+- AI formulerar förklaringen (Claude Haiku, max 300 tokens)
+- Sparar frakt i DB för framtida jämförelser (cold-start löser sig med tid)
+- Länk tillagd i landningssidans nav
+
+**Nya filer:**
+- `migration-validate.sql` — shipments-tabell (kör i Neon)
+- `lib/validateShipment.ts` — regelmotor
+- `app/api/validate/route.ts` — API-route
+- `app/validate/page.tsx` — UI-sida
+
+---
+
+## Session: 2026-04-08
 
 ### Vad som byggts
 
